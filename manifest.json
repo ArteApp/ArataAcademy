@@ -1,0 +1,13 @@
+{
+  "name": "Arata Academy",
+  "short_name": "Arata",
+  "start_url": "index.html",
+  "display": "fullscreen",
+  "icons": [{
+    "src": "assets/imgs/logo_only.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }],
+  "background_color": "#be1823",
+  "theme_color": "#be1823"
+}
