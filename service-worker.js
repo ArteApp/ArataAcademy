@@ -2,7 +2,7 @@
 importScripts('./build/sw-toolbox.js');
 
 self.toolbox.options.cache = {
-  name: 'arata-cache-02'
+  name: 'arata-cache-03'
 };
 
 // pre-cache our key assets
