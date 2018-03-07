@@ -1,8 +1,12 @@
 'use strict';
 importScripts('./build/sw-toolbox.js');
 
+
+
+
+
 self.toolbox.options.cache = {
-  name: 'arata-cache-201803071411'
+  name: 'arata-cache-201803071824'
 };
 
 // pre-cache our key assets
@@ -45,7 +49,7 @@ function urlB64ToUint8Array(base64String) {
   return outputArray;
 }
 
-self.addEventListener('push', function(event) {
+self.addEventListener('push', function (event) {
   console.log('[Service Worker] Push Received.');
   console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
 
@@ -57,9 +61,21 @@ self.addEventListener('push', function(event) {
   };
 
   event.waitUntil(self.registration.showNotification(title, options));
+
 });
 
-self.addEventListener('notificationclick', function(event) {
+const title = 'Arata Academy';
+const options = {
+  body: 'Esta é uma notificação de exemplo',
+  icon: 'assets/imgs/logo_only.png',
+  badge: 'assets/imgs/logo.png'
+};
+
+setInterval(function () {
+  self.registration.showNotification(title, options);
+}, 30000);
+
+self.addEventListener('notificationclick', function (event) {
   console.log('[Service Worker] Notification click Received.');
 
   event.notification.close();
@@ -69,7 +85,7 @@ self.addEventListener('notificationclick', function(event) {
   );
 });
 
-self.addEventListener('pushsubscriptionchange', function(event) {
+self.addEventListener('pushsubscriptionchange', function (event) {
   console.log('[Service Worker]: \'pushsubscriptionchange\' event fired.');
   const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
   event.waitUntil(
@@ -77,9 +93,9 @@ self.addEventListener('pushsubscriptionchange', function(event) {
       userVisibleOnly: true,
       applicationServerKey: applicationServerKey
     })
-    .then(function(newSubscription) {
-      // TODO: Send to application server
-      console.log('[Service Worker] New subscription: ', newSubscription);
-    })
+      .then(function (newSubscription) {
+        // TODO: Send to application server
+        console.log('[Service Worker] New subscription: ', newSubscription);
+      })
   );
 });
