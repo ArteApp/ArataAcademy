@@ -1,12 +1,12 @@
 'use strict';
 importScripts('./build/sw-toolbox.js');
 
-
+importScripts("//cdn.jsdelivr.net/npm/pouchdb@6.4.3/dist/pouchdb.min.js");
 
 
 
 self.toolbox.options.cache = {
-  name: 'arata-cache-201803071824'
+  name: 'arata-cache-201803072045'
 };
 
 // pre-cache our key assets
@@ -32,6 +32,9 @@ self.toolbox.router.default = self.toolbox.networkFirst;
 
 const applicationServerPublicKey = 'BH8-hIchXKMI6AKSee8gD0hhPThRqaEhIEtMJwcTjEQhiOKdG-_2tTIO-6hOAK4kwg5M9Saedjxp4hVE-khhWxY';
 
+const db = new PouchDB('arata');
+const remotedb = new PouchDB('http://192.168.1.2:5984/arata');
+
 /* eslint-enable max-len */
 
 function urlB64ToUint8Array(base64String) {
@@ -50,8 +53,8 @@ function urlB64ToUint8Array(base64String) {
 }
 
 self.addEventListener('push', function (event) {
-  console.log('[Service Worker] Push Received.');
-  console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
+  //console.log('[Service Worker] Push Received.');
+  //console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
 
   const title = 'Arata Academy';
   const options = {
@@ -64,19 +67,8 @@ self.addEventListener('push', function (event) {
 
 });
 
-const title = 'Arata Academy';
-const options = {
-  body: 'Esta é uma notificação de exemplo',
-  icon: 'assets/imgs/logo_only.png',
-  badge: 'assets/imgs/logo.png'
-};
-
-setInterval(function () {
-  self.registration.showNotification(title, options);
-}, 30000);
-
 self.addEventListener('notificationclick', function (event) {
-  console.log('[Service Worker] Notification click Received.');
+  //console.log('[Service Worker] Notification click Received.');
 
   event.notification.close();
 
@@ -86,7 +78,7 @@ self.addEventListener('notificationclick', function (event) {
 });
 
 self.addEventListener('pushsubscriptionchange', function (event) {
-  console.log('[Service Worker]: \'pushsubscriptionchange\' event fired.');
+  //console.log('[Service Worker]: \'pushsubscriptionchange\' event fired.');
   const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
   event.waitUntil(
     self.registration.pushManager.subscribe({
@@ -95,7 +87,38 @@ self.addEventListener('pushsubscriptionchange', function (event) {
     })
       .then(function (newSubscription) {
         // TODO: Send to application server
-        console.log('[Service Worker] New subscription: ', newSubscription);
+        //console.log('[Service Worker] New subscription: ', newSubscription);
       })
   );
 });
+
+setInterval(function () {
+  db.sync(remotedb);
+
+  db.changes({
+    since: 'now'
+  }).on('change', function (change) {
+    console.log("atualizou");
+
+  }).on('error', function (err) {
+    console.error("Deu erro");
+  });
+
+
+  db.allDocs({
+    limit: 1,
+    descending: true,
+    include_docs: true
+  }).then((docs) => {
+    console.log(docs);
+    const title = docs.rows[0].doc.title;
+    const options = {
+      body: docs.rows[0].doc.options.body,
+      icon: docs.rows[0].doc.options.icon,
+      badge: docs.rows[0].doc.options.badge
+    };
+    self.registration.showNotification(title, options);
+  }).on('error', function (err) {
+    console.log(err);
+  });
+}, 30000);

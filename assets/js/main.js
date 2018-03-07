@@ -37,7 +37,7 @@ function updateSubscriptionOnServer(subscription) {
     document.querySelector('.js-subscription-details');
 
   if (subscription) {
-    console.log("SUBSCRIPTION: ---------------------------------------------------------------" + JSON.stringify(subscription));
+    //console.log("SUBSCRIPTION: ---------------------------------------------------------------" + JSON.stringify(subscription));
   }
 }
 
@@ -48,7 +48,7 @@ function subscribeUser() {
     applicationServerKey: applicationServerKey
   })
     .then(function (subscription) {
-      console.log('User is subscribed.');
+      //console.log('User is subscribed.');
 
       updateSubscriptionOnServer(subscription);
 
@@ -57,7 +57,7 @@ function subscribeUser() {
       updateBtn();
     })
     .catch(function (err) {
-      console.log('Failed to subscribe the user: ', err);
+     // console.log('Failed to subscribe the user: ', err);
       updateBtn();
     });
 }
@@ -70,12 +70,12 @@ function unsubscribeUser() {
       }
     })
     .catch(function (error) {
-      console.log('Error unsubscribing', error);
+      //console.log('Error unsubscribing', error);
     })
     .then(function () {
       updateSubscriptionOnServer(null);
 
-      console.log('User is unsubscribed.');
+      //console.log('User is unsubscribed.');
       isSubscribed = false;
 
       updateBtn();
@@ -96,9 +96,9 @@ function initializeUI() {
       updateSubscriptionOnServer(subscription);
 
       if (isSubscribed) {
-        console.log('User IS subscribed.');
+        //console.log('User IS subscribed.');
       } else {
-        console.log('User is NOT subscribed.');
+        //console.log('User is NOT subscribed.');
       }
 
       updateBtn();
@@ -106,18 +106,18 @@ function initializeUI() {
 }
 
 if ('serviceWorker' in navigator && 'PushManager' in window) {
-  console.log('Service Worker and Push is supported');
+  //console.log('Service Worker and Push is supported');
 
   navigator.serviceWorker.register('service-worker.js')
     .then(function (swReg) {
-      console.log('Service Worker is registered', swReg);
+      //console.log('Service Worker is registered', swReg);
 
       swRegistration = swReg;
       initializeUI();
     })
     .catch(function (error) {
-      console.error('Service Worker Error', error);
+      //console.error('Service Worker Error', error);
     });
 } else {
-  console.warn('Push messaging is not supported');
+  //console.warn('Push messaging is not supported');
 }
