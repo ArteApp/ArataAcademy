@@ -6,7 +6,7 @@ importScripts("//cdn.jsdelivr.net/npm/pouchdb@6.4.3/dist/pouchdb.min.js");
 
 
 self.toolbox.options.cache = {
-  name: 'arata-cache-201803072045'
+  name: 'arata-cache-201803072120'
 };
 
 // pre-cache our key assets
@@ -33,7 +33,7 @@ self.toolbox.router.default = self.toolbox.networkFirst;
 const applicationServerPublicKey = 'BH8-hIchXKMI6AKSee8gD0hhPThRqaEhIEtMJwcTjEQhiOKdG-_2tTIO-6hOAK4kwg5M9Saedjxp4hVE-khhWxY';
 
 const db = new PouchDB('arata');
-const remotedb = new PouchDB('http://192.168.1.2:5984/arata');
+const remotedb = new PouchDB('https://admin:8eda208157d4@couchdb-bfef4c.smileupps.com/arata');
 
 /* eslint-enable max-len */
 
