@@ -6,7 +6,7 @@ importScripts("//cdn.jsdelivr.net/npm/pouchdb@6.4.3/dist/pouchdb.min.js");
 
 
 self.toolbox.options.cache = {
-  name: 'arata-cache-201803072120'
+  name: 'arata-cache-201803111349'
 };
 
 // pre-cache our key assets
@@ -31,9 +31,6 @@ self.toolbox.router.default = self.toolbox.networkFirst;
 /* eslint-disable max-len */
 
 const applicationServerPublicKey = 'BH8-hIchXKMI6AKSee8gD0hhPThRqaEhIEtMJwcTjEQhiOKdG-_2tTIO-6hOAK4kwg5M9Saedjxp4hVE-khhWxY';
-
-const db = new PouchDB('arata');
-const remotedb = new PouchDB('https://admin:8eda208157d4@couchdb-bfef4c.smileupps.com/arata');
 
 /* eslint-enable max-len */
 
@@ -92,33 +89,40 @@ self.addEventListener('pushsubscriptionchange', function (event) {
   );
 });
 
-setInterval(function () {
-  db.sync(remotedb);
 
-  db.changes({
-    since: 'now'
-  }).on('change', function (change) {
-    console.log("atualizou");
+//Envio de Notificações agendadas utilizando PouchDB
 
-  }).on('error', function (err) {
-    console.error("Deu erro");
-  });
+const db = new PouchDB('arata');
+const remotedb = new PouchDB('https://admin:8eda208157d4@couchdb-bfef4c.smileupps.com/arata');
+
+setInterval(async function () {
+  if (new Date().getHours() === 8 && new Date().getMinutes() === 52 && new Date().getSeconds() === 0) {
+    db.sync(remotedb);
+
+    db.changes({
+      since: 'now'
+    }).on('change', function (change) {
+      console.log("atualizou");
+
+    }).on('error', function (err) {
+      console.error("Deu erro");
+    });
 
 
-  db.allDocs({
-    limit: 1,
-    descending: true,
-    include_docs: true
-  }).then((docs) => {
-    console.log(docs);
-    const title = docs.rows[0].doc.title;
-    const options = {
-      body: docs.rows[0].doc.options.body,
-      icon: docs.rows[0].doc.options.icon,
-      badge: docs.rows[0].doc.options.badge
-    };
-    self.registration.showNotification(title, options);
-  }).on('error', function (err) {
-    console.log(err);
-  });
-}, 30000);
+    db.allDocs({
+      limit: 1,
+      descending: true,
+      include_docs: true
+    }).then((docs) => {
+      const title = docs.rows[0].doc.title;
+      const options = {
+        body: docs.rows[0].doc.options.body,
+        icon: docs.rows[0].doc.options.icon,
+        badge: docs.rows[0].doc.options.badge
+      };
+      self.registration.showNotification(title, options);
+    }).on('error', function (err) {
+      console.log(err);
+    });
+  }
+}, 1000);
