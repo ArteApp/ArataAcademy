@@ -6,7 +6,7 @@ importScripts("//cdn.jsdelivr.net/npm/pouchdb@6.4.3/dist/pouchdb.min.js");
 
 
 self.toolbox.options.cache = {
-  name: 'arata-cache-201803121719'
+  name: 'arata-cache-201803131915'
 };
 
 // pre-cache our key assets
@@ -96,7 +96,8 @@ const db = new PouchDB('arata');
 const remotedb = new PouchDB('https://admin:8eda208157d4@couchdb-bfef4c.smileupps.com/arata');
 
 setInterval(async function () {
-  if (new Date().getHours() === 8 && new Date().getMinutes() === 52 && new Date().getSeconds() === 0) {
+  //if (new Date().getHours() === 17 && new Date().getMinutes() === 43 && new Date().getSeconds() === 30) {
+  if (new Date().getMinutes() === 0 && new Date().getSeconds() === 0) {
     db.sync(remotedb);
 
     db.changes({
