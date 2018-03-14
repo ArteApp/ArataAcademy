@@ -6,7 +6,7 @@ importScripts("//cdn.jsdelivr.net/npm/pouchdb@6.4.3/dist/pouchdb.min.js");
 
 
 self.toolbox.options.cache = {
-  name: 'arata-cache-201803131915'
+  name: 'arata-cache-201803141951'
 };
 
 // pre-cache our key assets
